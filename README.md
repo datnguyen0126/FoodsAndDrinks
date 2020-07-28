@@ -21,19 +21,25 @@ At the root folder, go to frontend folder by this command:
 cd frontend
 ```
 
-Install all npm packages:
-
-```bash
+## Project setup
+```
 npm install
 ```
 
-
-start the frontend:
-
-```bash
+### Compiles and hot-reloads for development
+```
 npm run serve
 ```
 
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
 
 ## License
 Feel free to use :)

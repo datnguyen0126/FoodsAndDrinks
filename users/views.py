@@ -20,7 +20,6 @@ class AuthViewSet(viewsets.GenericViewSet):
         'register': serializers.UserRegisterSerializer,
         'admin_register': serializers.UserRegisterSerializer,
         'logout': serializers.EmptySerializer,
-        'password_change': serializers.PasswordChangeSerializer,
         'profile': serializers.UserProfileSerializer,
         'profile_picture': serializers.UserProfileSerializer,
     }
@@ -58,14 +57,6 @@ class AuthViewSet(viewsets.GenericViewSet):
         logout(request)
         data = {'message': 'Sucessfully logged out'}
         return Response(data=data, status=status.HTTP_200_OK)
-
-    @action(methods=['POST'], detail=False, url_path='user/changepassword', permission_classes=[IsAuthenticated])
-    def password_change(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        request.user.set_password(serializer.validated_data['new_password'])
-        request.user.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['GET', 'PUT'], detail=False, url_path='user/profile', permission_classes=[IsAuthenticated])
     def profile(self, request):
@@ -107,5 +98,15 @@ class AuthViewSet(viewsets.GenericViewSet):
             return self.serializer_classes[self.action]
         return super().get_serializer_class()
 
+class PasswordViewSet(viewsets.GenericViewSet):
 
-            
+    serializer_class = serializers.PasswordChangeSerializer
+    
+    @action(methods=['POST'], detail=False, url_path='password/update', permission_classes=[IsAuthenticated])
+    def password_change(self, request):
+        serializer = serializers.PasswordChangeSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        request.user.set_password(serializer.validated_data['new_password'])
+        request.user.save()
+        data = {'message': 'Password updated'}
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
