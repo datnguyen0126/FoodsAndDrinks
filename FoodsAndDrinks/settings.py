@@ -9,11 +9,20 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
+from os.path import exists, abspath, dirname, join
 
 import os, environ
 
 env = environ.Env()
 # reading .env file
+# environ.Env.read_env()
+
+BASE_DIR = dirname(dirname(dirname(__file__)))
+env_file = join(dirname(BASE_DIR), ".env")
+if not exists(env_file):
+    env_file = ".env"
+if exists(env_file):
+    environ.Env.read_env(str(env_file))
 environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -24,7 +33,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'bg#f9rgr!v-(633$sq9qe*+1f^vk&h5$e4&u0e2ai#*d$0%%l&'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -47,8 +56,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'oauth2_provider',
-
+    'django.contrib.sites',
     # Local Apps
+    'foods',
     'users.apps.UsersConfig',
 
     #Clean Apps    
@@ -152,4 +162,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
+
 AUTH_USER_MODEL = 'users.User'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+DJANGO_HOST = env("VUE_APP_DJANGO_HOST")
+
+PAGESIZE = env("PAGESIZE")
+
+AUTH_USER_MODEL = 'users.User'
+
