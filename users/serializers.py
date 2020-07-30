@@ -56,4 +56,12 @@ class PasswordChangeSerializer(serializers.Serializer):
         password_validation.validate_password(value)
         return value
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    """
+    A user serializer for get profile of user
+    """
 
+    class Meta:
+        model = User
+        fields = ('email', 'name', 'phone', 'picture_url','address')
+        read_only_fields = ('email', )
