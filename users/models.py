@@ -2,6 +2,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+def name_file(instance, filename):
+    return '/'.join(['users', str(instance.name), filename])
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -21,10 +24,16 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email: str, password: str, **extra_fields):
         return self._create_user(email, password, True, True, **extra_fields)
 
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True, max_length=100)
-    picture_url = models.ImageField(null=True)
+    picture_url = models.ImageField(upload_to=name_file ,max_length=254,null=True)
     name = models.CharField(max_length=255, null=False)
     phone = models.IntegerField(null=True)
     address = models.CharField(max_length=100, null=True)
