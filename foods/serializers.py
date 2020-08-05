@@ -3,6 +3,7 @@ from django.conf import settings
 from .models.CategoryModel import Category
 from .models.FoodModel import Food
 from .models.ImagesMopdel import Images
+from .models.RatingModel import Rating
 from .services.FoodServices import FoodService
 
 
@@ -17,10 +18,17 @@ class ImagesSerializer(serializers.ModelSerializer):
         fields = ['id', 'image_url']
 
 
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ['id', 'food_id', 'user_id', 'score']
+        read_only_fields = ('user_id',)
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model: Category
-        fields: ['id', 'name', 'parent_id']
+        model = Category
+        fields = ['id', 'name', 'parent_id']
 
 
 class FoodSerializer(serializers.ModelSerializer):
