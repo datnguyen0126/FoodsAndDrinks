@@ -58,9 +58,10 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'django.contrib.sites',
     # Local Apps
+    'users',
     'foods',
+    'orders',
     'comments',
-    'users.apps.UsersConfig',
 
     # Clean Apps
     'django_cleanup.apps.CleanupConfig'
@@ -174,4 +175,14 @@ PAGESIZE = env("PAGESIZE")
 AUTH_USER_MODEL = 'users.User'
 
 CART_SESSION_ID = 'cart'
+
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+CELERY_TASK_ALWAYS_EAGER = True
 

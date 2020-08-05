@@ -12,34 +12,17 @@ At the root folder, type this command and follow the link provided (check your c
 python manage.py runserver
 ```
 
-
-## Start web project
-
-At the root folder, go to frontend folder by this command:
+and run celery to excute task (if not windows os, be able to skip '-P eventlet')
 
 ```bash
-cd frontend
+celery -A FoodsAndDrinks worker -l info -P eventlet
 ```
 
-## Project setup
-```
-npm install
-```
+don't forget to run rabbitmq together. See this tutorial
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+[how to install and run rabbitmq](https://www.rabbitmq.com/download.html)
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
 
 ## License
 Feel free to use :)
+
