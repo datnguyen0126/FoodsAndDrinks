@@ -1,15 +1,33 @@
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import viewsets, status
 from django.conf import settings
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
-from .serializers import FoodSerializer, PostOrPutFoodSerializer, ImagesSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from .serializers import FoodSerializer, PostOrPutFoodSerializer, RatingSerializer, CategorySerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from .models.CategoryModel import Category
 from .models.FoodModel import Food
 from .models.ImagesMopdel import Images
+from .models.RatingModel import Rating
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+
+class CategoryList(ListCreateAPIView):
+    queryset = Category.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    serializer_class = CategorySerializer
+
+
+class CategoryDetail(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    serializer_class = CategorySerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return Category.objects.filter(id=self.kwargs['id'])
 
 
 class FoodList(APIView):
@@ -83,3 +101,21 @@ class DeleteImagesInFood(APIView):
 
         except Images.DoesNotExist:
             raise Http404
+
+
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        response = {'message': 'Rating cannot be delete like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, *args, **kwargs):
+        response = {'message': 'Rating cannot be update like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
