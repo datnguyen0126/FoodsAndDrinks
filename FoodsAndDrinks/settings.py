@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 from os.path import exists, abspath, dirname, join
+from corsheaders.defaults import default_headers
 
 import os, environ
 
@@ -52,11 +53,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third-Party Apps
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'oauth2_provider',
-    'django.contrib.sites',
+    'django_extensions',
     # Local Apps
     'users',
     'foods',
@@ -80,6 +82,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -185,4 +188,9 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 CELERY_TASK_ALWAYS_EAGER = True
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
 

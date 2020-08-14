@@ -7,6 +7,10 @@ from rest_framework.response import Response
 from . import serializers
 from .service import user_service
 
+from social_django.utils import load_strategy, load_backend
+from social_core.backends.oauth import BaseOAuth2
+from social_core.exceptions import MissingBackend, AuthTokenError, AuthForbidden
+
 from django.http import JsonResponse
 from requests.exceptions import HTTPError
 
@@ -98,6 +102,7 @@ class AuthViewSet(viewsets.GenericViewSet):
             return self.serializer_classes[self.action]
         return super().get_serializer_class()
 
+
 class PasswordViewSet(viewsets.GenericViewSet):
 
     serializer_class = serializers.PasswordChangeSerializer
@@ -110,3 +115,4 @@ class PasswordViewSet(viewsets.GenericViewSet):
         request.user.save()
         data = {'message': 'Password updated'}
         return Response(data, status=status.HTTP_204_NO_CONTENT)
+
