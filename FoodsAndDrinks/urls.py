@@ -10,6 +10,7 @@ urlpatterns = [
     path('comments/', include('comments.urls')),
     path('cart/', include('cart.urls')),
     path('order/', include('orders.urls')),
+    path('search', include('search.urls')),
     path('', include('users.urls')),
 ]
 

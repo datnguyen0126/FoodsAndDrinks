@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
 
     # Third-Party Apps
     'rest_framework',
@@ -57,11 +58,15 @@ INSTALLED_APPS = [
     'rest_auth',
     'oauth2_provider',
     'django.contrib.sites',
+    'corsheaders',
+
     # Local Apps
-    'users',
     'foods',
     'orders',
     'comments',
+    'cart',
+    'search',
+    'users',
 
     # Clean Apps
     'django_cleanup.apps.CleanupConfig'
@@ -87,7 +92,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'FoodsAndDrinks.urls'
 
@@ -124,6 +134,12 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }
     }
+}
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': env("SEARCH_ELASTIC")
+    },
 }
 
 # Password validation
