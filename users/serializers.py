@@ -66,3 +66,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ('email', 'name', 'phone', 'picture_url','address')
         read_only_fields = ('email', )
 
+class SocialSerializer(serializers.Serializer):
+    """
+    Serializer which accepts an OAuth2 access token and provider.
+    """
+
+    provider = serializers.CharField(max_length=255, required=True)
+    access_token = serializers.CharField(max_length=4096, required=True, trim_whitespace=True)
+

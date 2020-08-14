@@ -18,7 +18,10 @@ class Cart(object):
 
     def __iter__(self):
         user_id = self.cart_owner_id
-        food_ids = self.cart[user_id].keys()
+        try:
+            food_ids = self.cart[user_id].keys()
+        except KeyError:
+            yield None
         foods = Food.objects.filter(id__in=food_ids)
 
         cart = self.cart[user_id].copy()
@@ -60,8 +63,8 @@ class Cart(object):
                 del self.cart[user_id]
         self.save()
 
-    def clear(self):
-        del self.session[settings.CART_SESSION_ID]
+    def clear(self, user):
+        del self.session[settings.CART_SESSION_ID][user_id]
         self.save()
 
     def get_total_price(self):

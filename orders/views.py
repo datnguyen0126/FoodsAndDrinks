@@ -13,6 +13,7 @@ from .tasks import order_created
 from django.http import JsonResponse
 from requests.exceptions import HTTPError
 from django.db import transaction
+from django.db import IntegrityError
 
 
 User = get_user_model()
@@ -34,6 +35,7 @@ class OrderViewSet(viewsets.GenericViewSet):
             data = {'message': 'Error orcur while adding order item, please check your cart again'}
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         order_created.delay(order.id)
+        cart.clear(request.user)
         data = {'message': 'Order created successfully'}
         return Response(data=data, status=status.HTTP_201_CREATED)
 
