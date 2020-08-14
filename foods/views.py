@@ -1,3 +1,4 @@
+import math
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -37,7 +38,30 @@ class FoodList(APIView):
     def get(self, request, format=None):
         foods = Food.objects.all().order_by('-id')
         pagesize = int(settings.PAGESIZE)
-        page_total = round(Food.objects.all().count() / pagesize + 0.5)
+        page_total = math.ceil(len(foods) / pagesize)
+        paginator = Paginator(foods, pagesize)
+        page = request.GET.get("page", "1").isdigit() and int(request.GET.get("page", "1")) or 1
+        try:
+            paginated_querySet = paginator.page(page)
+        except EmptyPage:
+            paginated_querySet = paginator.page(paginator.num_pages)
+        serializer = self.serializer_class(paginated_querySet, many=True)
+        content = {
+            "page": page,
+            "pagetotal": page_total,
+            "listfoods": serializer.data,
+        }
+        return Response(content)
+
+
+class FoodListByCategory(APIView):
+    permission_classes = [AllowAny, ]
+    serializer_class = FoodSerializer
+
+    def get(self, request, pk, format=None):
+        foods = Food.objects.filter(category_id=pk).order_by('-id')
+        pagesize = int(settings.PAGESIZE)
+        page_total = math.ceil(len(foods) / pagesize)
         paginator = Paginator(foods, pagesize)
         page = request.GET.get("page", "1").isdigit() and int(request.GET.get("page", "1")) or 1
         try:

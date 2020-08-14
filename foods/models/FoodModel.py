@@ -17,6 +17,9 @@ class Food(models.Model):
 
     objects = FoodQuerySet()
 
+    def __str__(self):
+        return self.name
+
     def avg_rating(self):
         total_score = 0
         ratings = Rating.objects.filter(food_id=self)
