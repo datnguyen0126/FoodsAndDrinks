@@ -1,7 +1,7 @@
 Django==3.0.8
 django_environ==0.4.5
 requests==2.24.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 environ==1.0
 Pillow==7.2.0
 django_cleanup==5.0.0
